@@ -38,6 +38,7 @@ export const createBatch       = (d)   => request('/api/batches', { method: 'POS
 
 // ─── Allocations ───────────────────────────────────────────
 export const getAllocations     = ()    => request('/api/allocations');
+export const getTeacherAllocations = (id) => request(`/api/allocations/teacher/${id}`);
 export const saveAllocations   = (d)   => request('/api/allocations', { method: 'POST', body: JSON.stringify(d) });
 export const deleteAllocation  = (id)  => request(`/api/allocations/${id}`, { method: 'DELETE' });
 

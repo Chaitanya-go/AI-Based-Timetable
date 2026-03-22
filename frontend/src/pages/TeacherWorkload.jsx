@@ -97,6 +97,45 @@ export default function TeacherWorkload() {
     load()
   }, [])
 
+  // ── Load existing allocations when teacher changes ──
+  useEffect(() => {
+    if (!selectedTeacher || useMock) {
+      setAssignments([]);
+      return;
+    }
+
+    async function fetchExisting() {
+      try {
+        const existing = await api.getTeacherAllocations(selectedTeacher);
+        if (existing.length === 0) {
+          setAssignments([]);
+          return;
+        }
+
+        // Group by (subject_id, group_type) to rebuild the UI assignments
+        const grouped = {};
+        existing.forEach(alloc => {
+          const type = alloc.group_type === 'division' ? 'theory' : 'practical';
+          const key = `${alloc.subject_id}-${type}`;
+          if (!grouped[key]) {
+            grouped[key] = {
+              id: nextId++,
+              subjectId: String(alloc.subject_id),
+              type: type,
+              selectedGroups: []
+            };
+          }
+          grouped[key].selectedGroups.push(alloc.group_id);
+        });
+
+        setAssignments(Object.values(grouped));
+      } catch (err) {
+        toast.error("Failed to load existing allocations");
+      }
+    }
+    fetchExisting();
+  }, [selectedTeacher, useMock]);
+
   // ── Assignment CRUD ──
   function addAssignment() {
     setAssignments(prev => [
@@ -234,7 +273,6 @@ export default function TeacherWorkload() {
             value={selectedTeacher}
             onChange={e => {
               setSelectedTeacher(e.target.value)
-              setAssignments([])
             }}
           >
             <option value="">— Choose a teacher —</option>
