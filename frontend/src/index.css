@@ -1,0 +1,761 @@
+/* ====================================================
+   AI Timetable Generator — Global Styles
+   Catppuccin Mocha-inspired dark theme
+   ==================================================== */
+
+:root {
+  /* ── Palette ── */
+  --bg-base:      #1e1e2e;
+  --bg-surface:   #181825;
+  --bg-overlay:   #11111b;
+  --bg-card:      #24243a;
+  --bg-card-alt:  #2a2a45;
+
+  --text:         #cdd6f4;
+  --text-sub:     #a6adc8;
+  --text-dim:     #6c7086;
+
+  --accent:       #89b4fa;
+  --accent-hover: #74c7ec;
+  --accent-glow:  rgba(137, 180, 250, 0.15);
+
+  --green:        #a6e3a1;
+  --green-dim:    rgba(166, 227, 161, 0.15);
+  --red:          #f38ba8;
+  --red-dim:      rgba(243, 139, 168, 0.15);
+  --yellow:       #f9e2af;
+  --yellow-dim:   rgba(249, 226, 175, 0.12);
+  --mauve:        #cba6f7;
+  --mauve-dim:    rgba(203, 166, 247, 0.15);
+  --peach:        #fab387;
+
+  --border:       rgba(137, 180, 250, 0.12);
+  --border-hover: rgba(137, 180, 250, 0.3);
+
+  --radius:       12px;
+  --radius-sm:    8px;
+  --radius-xs:    6px;
+
+  --shadow:       0 4px 24px rgba(0, 0, 0, 0.3);
+  --shadow-lg:    0 8px 40px rgba(0, 0, 0, 0.4);
+
+  --transition:   all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  --sidebar-w:    260px;
+}
+
+/* ── Reset ── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 15px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-base);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--text-dim);
+  border-radius: 999px;
+}
+
+/* ============================
+   Layout
+   ============================ */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── Sidebar ── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+}
+
+.sidebar-brand {
+  padding: 24px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-brand h1 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), var(--mauve));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+}
+
+.sidebar-brand span {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  color: var(--text-sub);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.sidebar-link:hover {
+  background: var(--accent-glow);
+  color: var(--accent);
+}
+
+.sidebar-link.active {
+  background: var(--accent-glow);
+  color: var(--accent);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.sidebar-link svg {
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+/* ── Main Content ── */
+.main-content {
+  flex: 1;
+  margin-left: var(--sidebar-w);
+  padding: 32px 40px;
+  min-height: 100vh;
+}
+
+/* ── Page Header ── */
+.page-header {
+  margin-bottom: 28px;
+}
+
+.page-header h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.page-header p {
+  color: var(--text-sub);
+  font-size: 0.88rem;
+  margin-top: 4px;
+}
+
+/* ============================
+   Cards & Containers
+   ============================ */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: var(--transition);
+}
+
+.card:hover {
+  border-color: var(--border-hover);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.card-header h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.card + .card {
+  margin-top: 16px;
+}
+
+/* ============================
+   Form Controls
+   ============================ */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-sub);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+
+.form-select,
+.form-input {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  color: var(--text);
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: var(--transition);
+  outline: none;
+}
+
+.form-select:focus,
+.form-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.form-select option {
+  background: var(--bg-surface);
+}
+
+/* ── Toggle Switch ── */
+.toggle-group {
+  display: flex;
+  background: var(--bg-surface);
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.toggle-btn {
+  flex: 1;
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.toggle-btn.active {
+  background: var(--accent);
+  color: var(--bg-base);
+}
+
+.toggle-btn:hover:not(.active) {
+  color: var(--text);
+}
+
+/* ── Checkbox Group ── */
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 0.88rem;
+}
+
+.checkbox-item:hover {
+  border-color: var(--border-hover);
+}
+
+.checkbox-item.checked {
+  background: var(--accent-glow);
+  border-color: var(--accent);
+}
+
+.checkbox-item input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--text-dim);
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.checkbox-item input[type="checkbox"]:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.checkbox-item input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--bg-base);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* ============================
+   Buttons
+   ============================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-xs);
+  font-size: 0.88rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg-base);
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(137, 180, 250, 0.3);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--accent);
+  border: 1px dashed var(--border);
+}
+
+.btn-ghost:hover {
+  background: var(--accent-glow);
+  border-color: var(--accent);
+}
+
+.btn-danger {
+  background: var(--red-dim);
+  color: var(--red);
+  border: 1px solid transparent;
+}
+
+.btn-danger:hover {
+  border-color: var(--red);
+}
+
+.btn-success {
+  background: var(--green);
+  color: var(--bg-base);
+}
+
+.btn-success:hover {
+  box-shadow: 0 4px 15px rgba(166, 227, 161, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.8rem;
+}
+
+.btn-block {
+  width: 100%;
+  justify-content: center;
+}
+
+/* ============================
+   Assignment Card
+   ============================ */
+.assignment-card {
+  background: var(--bg-card-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  position: relative;
+  animation: slideIn 0.3s ease;
+}
+
+.assignment-card + .assignment-card {
+  margin-top: 12px;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.assignment-card .remove-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--red-dim);
+  color: var(--red);
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: var(--transition);
+}
+
+.assignment-card .remove-btn:hover {
+  background: var(--red);
+  color: var(--bg-base);
+}
+
+.assignment-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  align-items: end;
+}
+
+.assignment-row .form-group {
+  margin-bottom: 0;
+}
+
+/* ============================
+   Summary / Preview
+   ============================ */
+.allocation-preview {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.allocation-preview h4 {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+}
+
+.allocation-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 0.85rem;
+  color: var(--text-sub);
+  border-bottom: 1px solid rgba(137, 180, 250, 0.06);
+}
+
+.allocation-row:last-child {
+  border-bottom: none;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.tag-theory {
+  background: var(--accent-glow);
+  color: var(--accent);
+}
+
+.tag-practical {
+  background: var(--green-dim);
+  color: var(--green);
+}
+
+.tag-division {
+  background: var(--mauve-dim);
+  color: var(--mauve);
+}
+
+.tag-batch {
+  background: var(--yellow-dim);
+  color: var(--yellow);
+}
+
+/* ============================
+   Timetable Grid
+   ============================ */
+.timetable-controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.timetable-grid {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.timetable-grid th {
+  background: var(--bg-surface);
+  padding: 12px 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+}
+
+.timetable-grid th:last-child { border-right: none; }
+
+.timetable-grid td {
+  padding: 8px 10px;
+  font-size: 0.82rem;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  vertical-align: top;
+  min-width: 120px;
+}
+
+.timetable-grid td:last-child { border-right: none; }
+.timetable-grid tr:last-child td { border-bottom: none; }
+
+.timetable-grid td:first-child {
+  font-weight: 600;
+  color: var(--text-sub);
+  background: var(--bg-surface);
+  white-space: nowrap;
+}
+
+.timetable-cell {
+  background: var(--bg-card);
+  border-radius: var(--radius-xs);
+  padding: 6px 8px;
+  min-height: 50px;
+}
+
+.timetable-cell .subject-name {
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--text);
+}
+
+.timetable-cell .teacher-name {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
+.timetable-cell .room-name {
+  font-size: 0.7rem;
+  color: var(--accent);
+  margin-top: 2px;
+}
+
+/* ============================
+   Manage Data Page
+   ============================ */
+.data-section {
+  margin-bottom: 32px;
+}
+
+.data-section h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.data-table th {
+  background: var(--bg-surface);
+  padding: 10px 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.data-table td {
+  padding: 10px 14px;
+  font-size: 0.88rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tr:hover td {
+  background: rgba(137, 180, 250, 0.04);
+}
+
+.inline-form {
+  display: flex;
+  gap: 10px;
+  align-items: end;
+}
+
+.inline-form .form-group {
+  margin-bottom: 0;
+}
+
+/* ============================
+   Empty States
+   ============================ */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-dim);
+}
+
+.empty-state svg {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+  opacity: 0.4;
+}
+
+.empty-state p {
+  font-size: 0.9rem;
+}
+
+/* ============================
+   Stats Row
+   ============================ */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  transition: var(--transition);
+}
+
+.stat-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.stat-card .stat-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+}
+
+.stat-card .stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-top: 4px;
+  background: linear-gradient(135deg, var(--accent), var(--mauve));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================
+   Responsive
+   ============================ */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 0;
+    overflow: hidden;
+  }
+  .main-content {
+    margin-left: 0;
+    padding: 20px 16px;
+  }
+  .assignment-row {
+    grid-template-columns: 1fr;
+  }
+  .checkbox-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

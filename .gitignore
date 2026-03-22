@@ -1,0 +1,13 @@
+# Node.js
+node_modules/
+dist/
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.env
+
+# Vite
+.vite/
