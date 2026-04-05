@@ -4,13 +4,13 @@ Timetable generation & retrieval routes.
 from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session, joinedload
-from ..database import get_db
-from ..models import (
+from app.database import get_db
+from app.models import (
     Allocation, Classroom, Lab, Division, Batch, Schedule,
     Teacher, Subject, GlobalSettings
 )
-from ..schemas import ScheduleEntry
-from ..engine.solver import TimetableSolver, AllocationInfo, RoomInfo
+from app.schemas import ScheduleEntry
+from app.engine.solver import TimetableSolver, AllocationInfo, RoomInfo
 
 router = APIRouter()
 
@@ -107,6 +107,8 @@ def generate_timetable(db: Session = Depends(get_db)):
 
     try:
         result = solver.solve()
+        if not result:
+            raise RuntimeError("Solver returned successfully but with zero entries. Check your workload or constraints.")
     except RuntimeError as e:
         raise HTTPException(409, str(e))
 
@@ -136,6 +138,7 @@ def generate_timetable(db: Session = Depends(get_db)):
                 room=s.room_name,
                 type=s.subject_type,
                 group=s.group_name,
+                division=f"Div {div_names.get(s.division_id, '')}" if s.division_id else s.group_name
             )
             for s in result
         ],
@@ -162,6 +165,7 @@ def get_schedule(db: Session = Depends(get_db)):
 
     div_names = {d.id: d.name for d in divisions_db}
     batch_names = {b.id: b.name for b in batches_db}
+    batch_div_ids = {b.id: b.division_id for b in batches_db}
     cr_names = {c.id: c.name for c in classrooms_db}
     lab_names = {l.id: l.name for l in labs_db}
 
@@ -169,13 +173,18 @@ def get_schedule(db: Session = Depends(get_db)):
     for e in entries:
         a = e.allocation
         group_name = ""
-        if a.group_type in ("division", "division"):
+        division_name = ""
+        
+        if a.group_type == "division" or getattr(a.group_type, "value", None) == "division":
             group_name = f"Div {div_names.get(a.group_id, a.group_id)}"
+            division_name = group_name
         else:
             group_name = batch_names.get(a.group_id, str(a.group_id))
+            div_id = batch_div_ids.get(a.group_id)
+            division_name = f"Div {div_names.get(div_id, '')}" if div_id else ""
 
         room_name = ""
-        if e.room_type in ("division",):
+        if e.room_type == "division":
             room_name = cr_names.get(e.room_id, str(e.room_id))
         else:
             room_name = lab_names.get(e.room_id, str(e.room_id))
@@ -192,6 +201,7 @@ def get_schedule(db: Session = Depends(get_db)):
             room=room_name,
             type=sub_type,
             group=group_name,
+            division=division_name
         ))
 
     return result

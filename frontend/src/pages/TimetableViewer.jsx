@@ -31,7 +31,7 @@ export default function TimetableViewer() {
 
   const [divisions, setDivisions]   = useState([])
   const [teachers, setTeachers]     = useState([])
-  const [settings, setSettings]     = useState({ college_start_time: '09:00', college_end_time: '17:00' })
+  const [settings, setSettings]     = useState({ college_start_time: '09:40', college_end_time: '17:00' })
 
   useEffect(() => {
     async function load() {
@@ -73,7 +73,12 @@ export default function TimetableViewer() {
         toast.success('Demo schedule generated!')
       } else {
         const result = await api.generateTimetable()
-        setSchedule(result.schedule || [])
+        if (!result.schedule || result.schedule.length === 0) {
+          toast.error('No feasible schedule could be found! Check for teacher/room conflicts.')
+          setSchedule([])
+          return
+        }
+        setSchedule(result.schedule)
         toast.success('Timetable generated successfully!')
       }
     } catch (err) {
@@ -87,7 +92,8 @@ export default function TimetableViewer() {
   const filteredSchedule = schedule.filter(entry => {
     if (filter === 'all') return true
     if (viewMode === 'teacher') return entry.teacher === filter
-    return entry.group?.includes(filter)
+    // Now check the new 'division' field so that Batch labs are shown when Div A is selected
+    return entry.division === filter || entry.group === filter
   })
 
   // ── Timeline Geometry ──
@@ -95,13 +101,25 @@ export default function TimetableViewer() {
   const endMins = parseTime(settings.college_end_time)
   const totalMins = Math.max(endMins - startMins, 60) // avoid div by 0
 
-  // generate hour ticks
+  // generate hour ticks (properly aligned to hours)
   const ticks = []
-  for (let m = startMins; m <= endMins; m += 60) {
-    const h = Math.floor(m / 60)
+  const firstHour = Math.ceil(startMins / 60)
+  const lastHour = Math.floor(endMins / 60)
+  for (let h = firstHour; h <= lastHour; h++) {
+    const m = h * 60
     const lbl = `${h.toString().padStart(2, '0')}:00`
     const pct = ((m - startMins) / totalMins) * 100
-    ticks.push({ label: lbl, left: pct })
+    if (pct >= 0 && pct <= 100) {
+      ticks.push({ label: lbl, left: pct })
+    }
+  }
+  // Also add a tick for the exact start time if it's not on the hour
+  if (startMins % 60 !== 0) {
+    ticks.unshift({ 
+      label: settings.college_start_time, 
+      left: 0, 
+      isStart: true 
+    })
   }
 
   // ── Render Day Track ──
@@ -170,10 +188,11 @@ export default function TimetableViewer() {
                 }}
                 title={`${e.subject}\n${e.teacher}\n${e.room} · ${e.group}\n${e.start_time} - ${e.end_time}`}
               >
+                <div className="entry-badge">{e.group}</div>
                 <div className="entry-time">{e.start_time}–{e.end_time}</div>
                 <div className="subject-name">{e.subject}</div>
                 <div className="teacher-name">{e.teacher}</div>
-                <div className="room-name">{e.room} · {e.group}</div>
+                <div className="room-name">{e.room}</div>
               </div>
             )
           })}
@@ -364,9 +383,21 @@ export default function TimetableViewer() {
           opacity: 0.8;
           margin-bottom: 2px;
         }
-        .timeline-entry .subject-name { font-weight: 600; font-size: 0.85rem; }
-        .timeline-entry .teacher-name { opacity: 0.9; }
-        .timeline-entry .room-name { opacity: 0.8; font-size: 0.7rem; }
+        .timeline-entry .subject-name { font-weight: 600; font-size: 0.82rem; line-height: 1.1; margin-bottom: 2px; }
+        .timeline-entry .teacher-name { opacity: 0.9; font-size: 0.72rem; }
+        .timeline-entry .room-name { opacity: 0.8; font-size: 0.72rem; font-weight: 600; margin-top: auto; }
+        .entry-badge {
+          position: absolute;
+          top: 6px;
+          right: 6px;
+          background: rgba(0,0,0,0.06);
+          padding: 2px 5px;
+          border-radius: 4px;
+          font-weight: 800;
+          font-size: 0.65rem;
+          color: inherit;
+          border: 1px solid rgba(0,0,0,0.1);
+        }
       `}</style>
     </>
   )

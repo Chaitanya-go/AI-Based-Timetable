@@ -149,3 +149,4 @@ class ScheduleEntry(BaseModel):
     room: str
     type: str
     group: str
+    division: Optional[str] = None

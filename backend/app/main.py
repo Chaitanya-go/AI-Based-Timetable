@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
 load_dotenv()
+print(f"DEBUG: Loaded DATABASE_URL: {os.getenv('DATABASE_URL')}")
 
 from .routes import teachers, subjects, academic, allocations, rooms, timetable  # noqa: E402
 
@@ -17,7 +18,7 @@ app = FastAPI(
 )
 
 # ── CORS ──
-origins = os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")
+origins = os.getenv("CORS_ORIGINS", "http://localhost:5174").split(",")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[o.strip() for o in origins],
